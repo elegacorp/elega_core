@@ -10,7 +10,7 @@ fn main() {
 	let mut storage = context.storage;
 	let bytes_to_store: Vec<u8> = vec![b'A', b'w', b',', b'y', b'e', b'a', b'h', b'!']; // Aw, yeah!
 	let stored_bytes_length = bytes_to_store.len();
-	let stored_bytes_address = storage.add_byte_vec(bytes_to_store);
+	let stored_bytes_address = storage.add_byte_vec(&bytes_to_store);
 	let total_time = start_time.elapsed().as_secs_f64();
 	print!("{} bytes stored at {} in temporary storage\n", stored_bytes_length, stored_bytes_address);
 
@@ -22,7 +22,7 @@ fn main() {
 	}
 
 	let integers_as_bytes_length = integers_as_bytes.len();
-	let integers_as_bytes_address = storage.add_byte_vec(integers_as_bytes);
+	let integers_as_bytes_address = storage.add_byte_vec(&integers_as_bytes);
 	print!("{} bytes stored at {} in temporary storage\n", integers_as_bytes_length, integers_as_bytes_address);
 	print!("Total stored in temporary storage: {}\n", storage.occupied);
 

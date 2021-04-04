@@ -60,20 +60,20 @@ impl TemporaryStorage
 		self.occupied += 1;
 	}
 
-	pub fn add_byte(&mut self, data_being_added: u8) -> usize
+	pub fn add_byte(&mut self, data_being_added: &u8) -> usize
 	{
 		let data_at_index = self.allocator.index;
-		self.data[self.allocator.index] = data_being_added;
+		self.data[self.allocator.index] = *data_being_added;
 		self.bump();
 		return data_at_index;
 	}
 
-	pub fn add_byte_vec(&mut self, data_being_added: Vec<u8>) -> usize
+	pub fn add_byte_vec(&mut self, data_being_added: &Vec<u8>) -> usize
 	{
 		let data_at_index = self.allocator.index;
 		for data_item in data_being_added 
 		{ 
-			self.data[self.allocator.index] = data_item;
+			self.data[self.allocator.index] = *data_item;
 			self.bump();
 		}
 
