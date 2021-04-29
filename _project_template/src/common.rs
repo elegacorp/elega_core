@@ -207,6 +207,7 @@ impl HeapStorageBlock
 	{
 		let data_at_index = self.allocator.index;
 		self.data.push(*data_being_added);
+		self.allocator.index += 1;
 		self.bump();
 		return data_at_index;
 	}

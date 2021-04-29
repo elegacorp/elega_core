@@ -1,11 +1,13 @@
 use std::time::{Instant, Duration};
 
-#[macro_use]
 mod common;
 
 use common::{TemporaryStorage, Context, Logger};
 
 use std::env::current_dir as current_directory;
+use std::env::args as command_line_arguments;
+use std::fs as file_system;
+use std::path::{Path, PathBuf};
 
 fn log_storage_amount(stored_bytes_length: usize, stored_bytes_address: usize) -> String
 {
@@ -35,7 +37,8 @@ fn total_run_time_message(total_time: f64) -> String
 	return log_message;
 }
 
-fn main() {
+fn logger_and_memory_example()
+{
 	let start_time = Instant::now();
 
 	let mut context_logger: Logger = Logger::new();
@@ -80,4 +83,62 @@ fn main() {
 	context.logger.log_info(&total_run_time_message(total_time));
 
 	context.logger.publish();
+}
+
+fn help_text()
+{
+	print!(
+"elega_core\n"
+	);
+}
+
+fn initialize_project(project_path: &String)
+{
+	print!("Creating project at {}...\n", project_path);
+	let project_directory_create_init = file_system::create_dir(project_path).unwrap();
+
+	let current_working_directory: String = current_directory().unwrap().display().to_string();
+	let mut project_template_path: String = current_working_directory.clone();
+	project_template_path.push_str("\\_project_template\\src\\");
+	print!("Copying template files from {}...\n", project_template_path);
+
+	for file_name_result in file_system::read_dir(project_template_path).unwrap()
+	{
+		let file_name_dir_entry = file_name_result.unwrap();
+		let path_as_string = file_name_dir_entry.path().display().to_string();
+		print!("Copying {}...\n", path_as_string);
+
+		let mut file_copied: String = path_as_string.clone();
+		let file_copied_without_cwd = &format_args!("{}", current_working_directory).to_string();
+		file_copied = file_copied.replace(file_copied_without_cwd, "");
+
+		let mut copy_to_path = project_path.clone();
+		copy_to_path.push('\\');
+		copy_to_path.push_str(&file_copied);
+
+		print!("copy_to_path: {}\n", copy_to_path);
+
+		file_system::copy(path_as_string, copy_to_path);
+	}
+}
+
+fn main() 
+{
+	let mut previous_argument = String::new();
+	for argument in command_line_arguments()
+	{
+		if argument == "--help" || argument == "-h"
+		{ help_text(); return; }
+
+		if previous_argument == "--init-project" || previous_argument == "-ip"
+		{
+			initialize_project(&argument);
+			return;
+		}
+
+		if argument == "--example"
+		{ logger_and_memory_example(); return; }
+		
+		previous_argument = argument;
+	}
 }
